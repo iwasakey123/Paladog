@@ -42,6 +42,7 @@ namespace Window
 		auto check = RegisterClassEx(&wnd_class);
 		assert(check != 0);
 
+		g_instance = hInstance;
 		g_handle = CreateWindowExW(
 			WS_EX_APPWINDOW,
 			L"Paladog",
@@ -71,21 +72,26 @@ namespace Window
 	inline const bool Update()
 	{
 		MSG msg;
-		ZeroMemory(&msg, sizeof(MSG));
-
-		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
+			if (msg.message == WM_QUIT)
+				return false;
+
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-
-		return msg.message != WM_QUIT;
+		return true;
 	}
 
 	inline void Destroy()
 	{
-		DestroyWindow(g_handle);
-		UnregisterClass(L"Paladog", g_instance);
+		if (g_handle)
+		{
+			DestroyWindow(g_handle);
+			g_handle = nullptr;
+		}
+		if (g_instance)
+			UnregisterClass(L"Paladog", g_instance);
 	}
 
 	inline const UINT GetWidth()
