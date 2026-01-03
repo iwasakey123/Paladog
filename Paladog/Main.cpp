@@ -8,7 +8,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE prevINSTANCe, LPSTR lpszCmdP
 
 	while (Window::Update())
 	{
-
+		//깃허브 테스트
 	}
 
 	Window::Destroy();
